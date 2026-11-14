@@ -1,7 +1,0 @@
-school,cleaned_csv_row,date_reported,suspect_date_occurred,crime_location,resolution,original_source
-ohio_state,5159,2023-10-07,2200-10-07,E 12th Ave,Unverified: blanked in analysis file; inspect raw log,See corresponding raw file
-tcu,1472,2019-10-22,2109-10-21,Lot 85,Unverified: blanked in analysis file; inspect raw log,See corresponding raw file
-tcu,1795,2021-01-30,2120-01-30,3400 Bellaire Dr. N sidewald,Unverified: blanked in analysis file; inspect raw log,See corresponding raw file
-tcu,1796,2021-02-01,2120-02-01,Police Department,Unverified: blanked in analysis file; inspect raw log,See corresponding raw file
-tcu,3315,2025-04-11,2055-04-11,Lupton Stadium,Unverified: blanked in analysis file; inspect raw log,See corresponding raw file
-tcu,3317,2025-04-11,2055-04-11,Lupton Stadium,Unverified: blanked in analysis file; inspect raw log,See corresponding raw file
