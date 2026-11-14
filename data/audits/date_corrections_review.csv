@@ -1,0 +1,5 @@
+university,date_reported,original_date_occurred,original_time_occurred,corrected_date_occurred,corrected_time_occurred,reason
+Ohio State University,2023-12-19,1900-01-01,00:00,,,Raw Ohio State log contains placeholder 1900 date or a later occurrence year than the report; true date/time not established.
+Ohio State University,2023-11-28,1900-01-01,00:00,,,Raw Ohio State log contains placeholder 1900 date or a later occurrence year than the report; true date/time not established.
+Ohio State University,2023-09-14,2025-09-13,17:00,,,Raw Ohio State log contains placeholder 1900 date or a later occurrence year than the report; true date/time not established.
+University of Central Florida,2023-10-28,2024-10-28,18:00,,,The source UCF log lists occurrence one year after reporting; no justified correction possible.
