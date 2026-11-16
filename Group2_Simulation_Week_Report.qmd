@@ -72,9 +72,15 @@ Our main outcome is the number of campus crime reports recorded each month. We c
 
 We use a consistent observation period from January 2018 through December 2024 to examine monthly reporting patterns across the six universities. For the before-and-after analysis, we compare average monthly crime reports during the 24 months before and after selected state policy dates. Michigan's online sports betting launch date is January 22, 2021, and Ohio's is January 1, 2023. For Florida, we use May 25, 2021, which represents a legal authorization milestone rather than the beginning of uninterrupted online sports betting availability. We exclude the policy month for Michigan and Florida to avoid comparing partial months. Because Florida's betting availability changed after its initial authorization, its before-and-after results require additional caution. These comparisons describe changes in campus crime reporting around the selected dates rather than the causal effects of legalization.
 
+## Cleaning review for Michigan State, Ohio State, and TCU - Pei Yun Chuang
+
+I reviewed the harmonized records for Michigan State University, Ohio State University, and Texas Christian University (TCU), the three institutions assigned to me for the initial data-cleaning stage. The three sources differ in their original date, time, and offense-description formats, so the combined file uses the shared nine-column schema. In the combined dataset, these universities contribute 17,175, 21,022, and 3,817 entries, respectively. I checked that their university names and state abbreviations are consistent (MI, OH, and TX), and that the reported dates can be parsed for the monthly analysis.
+
+A limitation of the harmonized file is that distinct original incidents can have identical values after only the nine retained fields are kept. Consequently, matching rows in the combined CSV are not sufficient evidence to delete an incident. Missing source details should remain missing rather than be inferred. This review describes the combined output; the original source-to-cleaned transformations should be checked separately before claiming that every individual cleaning decision has been independently reproduced.
+
 ## Summary statistics - Pei Yun Chuang
 
-Table 1 describes differences in monthly reporting across the six universities. Ohio State recorded an average of **226.7 reports per month**, with a standard deviation of **86.4** and a monthly range of **29 to 563**. Michigan State averaged **121.7** per month (standard deviation **66.7**), while Stetson averaged **9.7** (standard deviation **6.5**). These differences partly reflect the different sizes and reporting systems of the institutions. Because we do not divide counts by student enrollment, Table 1 should not be read as a ranking of campus safety.
+Table 1 describes differences in monthly reporting across the six universities. Each university has 84 observed months from January 2018 through December 2024, and the statistics use reported incidents rather than enrollment-adjusted crime rates. Ohio State recorded an average of **226.7 reports per month**, with a standard deviation of **86.4** and a monthly range of **29 to 563**. Michigan State averaged **121.7** per month (standard deviation **66.7**), while Stetson averaged **9.7** (standard deviation **6.5**). These differences partly reflect the different sizes and reporting systems of the institutions. Because we do not divide counts by student enrollment, Table 1 should not be read as a ranking of campus safety.
 
 ```{r}
 #| label: tbl-monthly
@@ -231,6 +237,10 @@ The third finding is that the broad **Other** category makes up most of the harm
 #| fig-width: 10
 #| fig-height: 7
 sample |>
+  mutate(`crime type` = factor(`crime type`, levels = c(
+    "Alcohol offense", "Sexual offense", "Robbery offense",
+    "Burglary offense", "Assault offense", "Other"
+  ))) |>
   ggplot(aes(x = `crime type`)) +
   geom_bar() +
   facet_wrap(~ campus, scales = "free_y", ncol = 2) +
@@ -271,3 +281,5 @@ Reported campus crime changed in different directions around the selected state 
 ## Contribution statement - Xueying Luo
 
 ## Contribution statement - Pei Yun Chuang
+
+I was responsible for preparing and reviewing the harmonized crime-log data for Michigan State University, Ohio State University, and Texas Christian University. My work included standardizing the fields needed for the combined dataset and reviewing the consistency of the cleaned records. For the final report, I contributed the summary statistics section and table, the discussion of crime categories and Figure 3, the comparison-state analysis and Figure 4, and the conclusion. I also reviewed the limitations of interpreting crime-log counts as campus crime rates or causal effects of sports betting legalization.
