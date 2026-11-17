@@ -20,7 +20,10 @@ execute:
 
 ```{=html}
 <style>
-body {font-size: 12pt; line-height: 1.5;}
+body {
+  font-size: 12pt;
+  line-height: 1.5;
+}
 </style>
 ```
 
@@ -46,45 +49,54 @@ crime <- crime |>
     )
   )
 
-# A shared 2018–2024 period is used for the descriptive figures.
+# Main analysis period: January 2018 to December 2024
 sample <- crime |>
-  filter(reported_year >= 2018, reported_year <= 2024)
+  filter(
+    reported_year >= 2018,
+    reported_year <= 2024
+  )
 
+# Monthly reported incidents by university
 monthly <- sample |>
   count(campus, reported_month)
 ```
 
 # Abstract (Executive Summary) - Xueying Luo
 
-This report examines changes in reported campus crime following online sports betting legalization using 55,218 crime log entries from six universities across California, Florida, Michigan, Ohio, and Texas. We analyze monthly crime reports from January 2018 through December 2024 and compare average monthly reports during 24-month periods before and after selected state policy dates. We find that reported incidents decreased by 22.7% at Michigan State University, from 118.2 to 91.4 per month, while Ohio State University experienced a smaller decline of 1.0%, from 246.4 to 243.8. In contrast, the University of Central Florida (UCF) experienced a 3.2% increase, from 67.5 to 69.7 reports per month, and Stetson University experienced a 39.5% increase, from 7.9 to 11.0. California and Texas, where online sports betting remained illegal, also experienced changes in campus crime reporting. Overall, the results show no consistent pattern in reported campus crime following the selected policy dates. These descriptive comparisons do not establish whether legalization caused the observed changes.
+This report examines campus crime reporting before and after online sports betting launched in Michigan, Ohio, and Florida. We combine 55,218 entries from crime logs at six universities and analyze 40,196 reports dated January 2018 through December 2024. Monthly trends and before-and-after averages measure changes around each state's online launch. Michigan State's monthly average fell by 22.7%, and Ohio State's fell by 1.0% over 24-month comparisons. In Florida's 12-month comparisons, UCF increased by 29.2%, while Stetson declined by 18.2%. Reports also changed at Pacific and TCU, located in California and Texas, where online sports betting had not launched. Three of the four universities in states that launched online betting recorded lower average monthly counts afterward. These results provide no evidence of a widespread increase in campus crime reports following online sports betting launches. The descriptive comparisons identify changes in reporting, but cannot determine whether betting policies caused them.
 
 # Data - Xueying Luo & Pei Yun Chuang
 
-Our primary data source consists of 55,218 campus crime log entries from six universities in five U.S. states. The data were provided for the Simulation Week assignment and include Michigan State University (17,175 records), Ohio State University (21,022), Texas Christian University (TCU) (3,817), the University of the Pacific (3,378), the University of Central Florida (8,848), and Stetson University (978). The original logs cover different time periods and use different reporting formats. To make comparisons more consistent, we focus our main analysis on January 2018 through December 2024, which includes 40,196 records across the six universities.
+We use 55,218 entries from crime logs supplied for six universities: Michigan State University (17,175 entries), Ohio State University (21,022), Texas Christian University (3,817), the University of the Pacific (3,378), the University of Central Florida (8,848), and Stetson University (978). The original logs span different years, so we focus our analysis on the 40,196 reports dated January 2018 through December 2024. We selected this period to use the same seven-year observation window across all six universities and to cover the online sports betting launches in Michigan, Ohio, and Florida. Although some universities have records from 2025 and 2026, we exclude those years from the analysis to maintain the selected observation period. We retain all 55,218 records in the harmonized dataset and apply the date restriction only in the report analysis.
 
-The harmonized dataset contains nine variables: reported date, occurrence date, reported time, occurrence time, state, university, crime category, sports betting legalization date, and crime location. Each observation represents an entry in a university crime log rather than a unique victim or necessarily a confirmed criminal offense. Because universities may differ in how they record and report incidents, differences in the number of entries should not automatically be interpreted as differences in underlying crime rates.
+The combined dataset contains nine fields: reported and occurred dates, reported and occurred times, state, university, standardized crime type, selected online betting launch date, and crime location. We use each entry as one reported incident and count entries by their reported month. This measures how many incidents entered each university's crime log over time. The focus on reported incidents also makes the six logs usable despite differences in how their original records were organized.
 
 ## Cleaning and main measures - Xueying Luo
 
-We cleaned each university's crime log separately before combining the six datasets. First, we standardized the reported and occurrence dates to `YYYY-MM-DD`, times to `HH:MM`, and state names to two-letter abbreviations. We then grouped the original incident descriptions into six categories: Alcohol offense, Sexual offense, Robbery offense, Burglary offense, Assault offense, and Other. The Other category includes incidents such as theft, property damage, and other reports that do not fall within the five specified offense categories. We also reviewed duplicate entries and inconsistent dates and crime classifications. We removed exact duplicate source records where appropriate but retained separate incidents that shared the same information after harmonization. When an occurrence date appeared incorrect and could not be verified from the original log, we retained the incident and treated the occurrence date as missing.
+We cleaned the original logs separately, then combined the six university files. We formatted dates as `YYYY-MM-DD`, times as `HH:MM`, and states as two-letter abbreviations. We also standardized the original offense descriptions into Alcohol offense, Sexual offense, Robbery offense, Burglary offense, Assault offense, and Other. The Other category includes theft, property damage, and descriptions outside the five specified categories. This common classification allows us to compare the distribution of reports across campuses in Figure 3.
 
-Our main outcome is the number of campus crime reports recorded each month. We calculate this measure using the reported date rather than the occurrence date because all 55,218 entries contain a reported date. The monthly counts therefore describe changes in reported incidents, which may not reflect the exact timing of the crimes themselves. The final dataset contains 816 missing occurrence dates, 1,330 missing reported times, 2,539 missing occurrence times, and 62 missing locations. We preserve these missing values rather than replacing them with estimated information. The legalization date is also missing for 7,195 records from California and Texas because neither state had legalized online sports betting during the period examined.
+We checked repeated records against the available source information and corrected inconsistent offense classifications. We removed documented source duplicates while keeping distinct incidents with matching values in the nine final columns. We also reviewed unusual dates. For example, one UCF entry had an occurrence date of October 28, 2024, even though the incident was reported on October 28, 2023. We retained the report and marked its unverified occurrence date and time as missing. The final dataset contains 816 missing occurrence dates, 1,330 missing reported times, 2,539 missing occurred times, and 62 missing locations. All 55,218 records have a reported date, so these missing fields do not reduce the monthly reporting sample.
 
-We use a consistent observation period from January 2018 through December 2024 to examine monthly reporting patterns across the six universities. For the before-and-after analysis, we compare average monthly crime reports during the 24 months before and after selected state policy dates. Michigan's online sports betting launch date is January 22, 2021, and Ohio's is January 1, 2023. For Florida, we use May 25, 2021, which represents a legal authorization milestone rather than the beginning of uninterrupted online sports betting availability. We exclude the policy month for Michigan and Florida to avoid comparing partial months. Because Florida's betting availability changed after its initial authorization, its before-and-after results require additional caution. These comparisons describe changes in campus crime reporting around the selected dates rather than the causal effects of legalization.
+We calculate monthly incident totals from the date reported and use the year reported to construct the annual comparison for Pacific and TCU. We select online betting launch dates to match the assignment's question: January 22, 2021 for Michigan, January 1, 2023 for Ohio, and November 7, 2023 for Florida. The state-by-state timeline lists Michigan's earlier March 2020 *retail* launch separately; the Michigan Gaming Control Board confirms January 22, 2021 as its *online* launch. Florida's 2021 gaming compact preceded its November 2023 online launch, so we use the later date shown in the timeline. The `gambling legal` column in the corrected CSV contains these online launch dates and is empty for California and Texas.
+
+**Policy-date sources:** Linnehan, Robert. "United States Sports Betting Legal & Regulation Timeline Tracker." *Sports Betting Dime*, updated October 30, 2026, https://www.sportsbettingdime.com/guides/legal/sports-betting-state-by-state-legal-tracker/. Michigan Gaming Control Board. *2021 Annual Report*, https://www.michigan.gov/mgcb/-/media/Project/Websites/mgcb/About/AnnualReports/2021-MGCB-Annual-Report-Public-Final.pdf.
+
+Our before-and-after comparison uses 24 complete months on each side of the Michigan and Ohio launches. We omit Michigan's January 2021 launch month and include Ohio's January 2023 launch month because betting began on January 1. Florida's November 2023 launch leaves 13 complete post-launch months within our selected 2018–2024 analysis period. We use 12-month comparison windows, from November 2022–October 2023 and December 2023–November 2024, excluding the November 2023 launch month. These windows use the same reported-month outcome but differ in length. They describe local changes in reported incidents around each state's launch date.
 
 ## Cleaning review for Michigan State, Ohio State, and TCU - Pei Yun Chuang
 
-I reviewed the harmonized records for Michigan State University, Ohio State University, and Texas Christian University (TCU), the three institutions assigned to me for the initial data-cleaning stage. The three sources differ in their original date, time, and offense-description formats, so the combined file uses the shared nine-column schema. In the combined dataset, these universities contribute 17,175, 21,022, and 3,817 entries, respectively. I checked that their university names and state abbreviations are consistent (MI, OH, and TX), and that the reported dates can be parsed for the monthly analysis.
+We standardized the Michigan State, Ohio State, and TCU logs into the nine fields required for the combined dataset. These sources contribute 17,175, 21,022, and 3,817 entries, respectively. We checked the university names, state codes, dates, and crime descriptions and reviewed classifications that did not agree with the source descriptions.
 
-A limitation of the harmonized file is that distinct original incidents can have identical values after only the nine retained fields are kept. Consequently, matching rows in the combined CSV are not sufficient evidence to delete an incident. Missing source details should remain missing rather than be inferred. This review describes the combined output; the original source-to-cleaned transformations should be checked separately before claiming that every individual cleaning decision has been independently reproduced.
+A key cleaning issue was identifying repeated incidents. Once the original logs were reduced to nine fields, separate incidents sometimes had identical values. We checked records against the original information before deciding whether to remove them. This helped preserve the report totals used in the monthly series and summary statistics.
 
 ## Summary statistics - Pei Yun Chuang
 
-Table 1 describes differences in monthly reporting across the six universities. Each university has 84 observed months from January 2018 through December 2024, and the statistics use reported incidents rather than enrollment-adjusted crime rates. Ohio State recorded an average of **226.7 reports per month**, with a standard deviation of **86.4** and a monthly range of **29 to 563**. Michigan State averaged **121.7** per month (standard deviation **66.7**), while Stetson averaged **9.7** (standard deviation **6.5**). These differences partly reflect the different sizes and reporting systems of the institutions. Because we do not divide counts by student enrollment, Table 1 should not be read as a ranking of campus safety.
+Ohio State recorded the highest average monthly report count among the six universities. From 2018 through 2024, it averaged 226.7 reports per month, with a standard deviation of 86.4 and a range of 29 to 563. Michigan State followed at 121.7 reports per month (standard deviation 66.7), while Stetson averaged 9.7 (standard deviation 6.5). Table 1 reports the mean, standard deviation, minimum, and maximum for all 84 months at each campus. The large differences in counts make it especially useful to examine the direction of change within each university around its launch date, as we do in Figures 1 and 2.
 
 ```{r}
 #| label: tbl-monthly
-#| tbl-cap: "Monthly campus crime reports, January 2018–December 2024"
+#| tbl-cap: "Monthly Campus Crime Reports, January 2018–December 2024"
+
 monthly_stats <- monthly |>
   group_by(campus) |>
   summarize(
@@ -95,41 +107,53 @@ monthly_stats <- monthly |>
     Months = n()
   )
 
-kbl(
-  monthly_stats,
-  col.names = c("University", "Mean", "Std. dev.", "Minimum", "Maximum", "Months")
-) |>
+monthly_stats |>
+  kbl(
+    col.names = c(
+      "University",
+      "Mean",
+      "Std. Dev.",
+      "Minimum",
+      "Maximum",
+      "Months"
+    ),
+    booktabs = TRUE
+  ) |>
   kable_styling(position = "center")
 ```
 
-*Table 1 note:* The unit of observation is a university-month. All 84 months from 2018 through 2024 contain reported incidents at each university. Statistics are calculated from monthly counts, not individual crime records. Higher counts do not necessarily indicate higher crime rates per student.
+*Table 1 note:* The unit is a university-month. Each university contributes 84 monthly counts from January 2018 through December 2024. Mean, standard deviation, minimum, and maximum summarize the number of entries in each month. Counts are not standardized by campus enrollment.
 
 # Findings/Results - Xueying Luo & Pei Yun Chuang
 
 ## Monthly incident trends differ across universities - Xueying Luo
 
-Monthly campus crime reports followed different patterns across the six universities, making it difficult to identify a common change around sports betting policy dates. Figure 1 shows monthly reports from January 2018 through December 2024, with red dashed lines marking the selected policy milestones. Ohio State and Michigan State generally reported more incidents than the other four universities. However, several campuses experienced declines before their policy dates. For example, Michigan State's annual reports fell from 1,940 in 2019 to 896 in 2020, while Ohio State's declined from 2,786 to 2,241. UCF also recorded fewer reports in 2020 (687) than in 2019 (978). These declines coincided with COVID-19 disruptions to campus activity, although the crime logs alone cannot explain their causes. Overall, the differences across universities and over time suggest that changes in campus reporting cannot be attributed to sports betting policies alone.
+Campus crime reports were already changing well before the online betting launch dates. Figure 1 plots monthly reports from 2018 through 2024 at all six universities, with dashed red lines identifying the launches in Michigan, Ohio, and Florida. Michigan State reported 1,940 incidents in 2019 and 896 in 2020, a decline of 53.8% before its January 2021 online launch. Ohio State also fell from 2,786 reports in 2019 to 2,241 in 2020, while UCF declined from 978 to 687 over those years. The large 2020 shifts occurred during the pandemic and show that campus reporting was moving for reasons beyond the timing of sports betting launches. Figure 1 therefore provides the background needed to interpret the more focused before-and-after averages in Figure 2.
 
 ```{r}
 #| label: fig-monthly
-#| fig-cap: "Monthly Reported Campus Incidents and Sports Betting Policy Milestones, 2018–2024"
+#| fig-cap: "Monthly campus crime reporting changed before and after online betting launches, 2018–2024"
 #| fig-width: 10
 #| fig-height: 7
 
 policy_dates <- data.frame(
-  campus = c("Michigan State", "Ohio State", "UCF", "Stetson"),
+  campus = c(
+    "Michigan State", "Ohio State",
+    "UCF", "Stetson"
+  ),
   policy_month = as.Date(c(
     "2021-01-22",
     "2023-01-01",
-    "2021-05-25",
-    "2021-05-25"
+    "2023-11-07",
+    "2023-11-07"
   )),
   label = c(
     "Jan 22, 2021",
     "Jan 1, 2023",
-    "May 25, 2021",
-    "May 25, 2021"
-  )
+    "Nov 7, 2023",
+    "Nov 7, 2023"
+  ),
+  label_y = c(340, 440, 155, 90)
 )
 
 monthly |>
@@ -145,14 +169,13 @@ monthly |>
     data = policy_dates,
     aes(
       x = policy_month,
-      y = 480,
+      y = label_y,
       label = label
     ),
     inherit.aes = FALSE,
     color = "red",
     size = 3,
-    angle = 0,
-    hjust = -0.1,
+    hjust = 1.05,
     vjust = 0
   ) +
   facet_wrap(~campus) +
@@ -163,15 +186,17 @@ monthly |>
   theme_minimal()
 ```
 
-*Note:* The figure shows monthly campus crime reports at six universities from January 2018 through December 2024. The horizontal axis represents the reporting month, and the vertical axis represents the number of reported incidents. All panels use the same vertical scale. Red dashed lines indicate the selected online sports betting policy dates, with the corresponding dates labeled beside each line. Michigan and Ohio mark the launch of online sports betting, while Florida marks legal authorization rather than uninterrupted online betting availability. Pacific and TCU have no policy lines because online sports betting remained illegal in California and Texas during the study period. The figure is descriptive and does not establish a causal relationship between sports betting policies and reported campus incidents.
+*Figure 1 note:* The six panels plot monthly crime-log entries by date reported, January 2018–December 2024, with a shared vertical scale. Dashed red lines identify online launch dates: Michigan, January 22, 2021; Ohio, January 1, 2023; and Florida, November 7, 2023. No line is shown for Pacific (California) or TCU (Texas), where online sports betting had not launched by 2024. Florida had an earlier 2021 compact, followed by interruptions before its 2023 online launch.
 
-## Before-and-after comparisons do not show a common direction - Xueying Luo
+## Three of four launch-state campuses recorded lower monthly averages afterward - Xueying Luo
 
-Average monthly campus crime reports changed in different directions following the selected sports betting policy milestones. Figure 2 compares reported incidents during the 24 months before and after each state's selected policy date. Michigan State's monthly average declined from 118.2 to 91.4 reports, a 22.7% decrease. Ohio State experienced a much smaller decline, from 246.4 to 243.8 reports per month, or 1.0%. In contrast, both Florida universities recorded increases. UCF's monthly average rose from 67.5 to 69.7 reports (3.2%), while Stetson's increased from 7.9 to 11.0 (39.5%). Stetson's percentage increase was relatively large because its average before the policy date was only 7.9 reports per month. The Florida comparisons also require caution because the selected 2021 date marks legal authorization rather than the beginning of continuous online betting availability. Overall, these differences do not show a consistent increase or decrease in campus crime reporting following the selected policy milestones.
+Three of the four universities in states that launched online sports betting recorded fewer monthly reports afterward. Figure 2 provides the main comparison. Michigan State fell from 118.2 to 91.4 reports per month (22.7%) in its 24-month windows. Ohio State remained nearly unchanged, declining from 246.4 to 243.8 (1.0%). In Florida's 12-month windows, Stetson declined from 14.2 to 11.6 (18.2%), while UCF rose from 57.6 to 74.4 (29.2%). The UCF increase amounts to about 17 additional reports per month; Stetson's decrease is about three reports per month.
+
+The most notable result is the difference between the two Florida universities. They share the same state launch date and comparison windows, yet their reporting averages moved in opposite directions. Together with the smaller Ohio State change and the Michigan State decline, this gives us no evidence of a common increase in reported campus incidents after online betting launches. The comparisons describe movements in campus reports around each launch; they do not measure a policy effect.
 
 ```{r}
 #| label: fig-before-after
-#| fig-cap: "Average monthly reported incidents before and after selected sports betting policy milestones"
+#| fig-cap: "Monthly crime reports fell at three of four campuses after the selected online betting launches"
 #| fig-width: 9
 #| fig-height: 5
 
@@ -181,104 +206,164 @@ before_after <- monthly |>
       campus == "Michigan State" &
         reported_month >= as.Date("2019-01-01") &
         reported_month <= as.Date("2020-12-01") ~ "Before",
-      
+
       campus == "Michigan State" &
         reported_month >= as.Date("2021-02-01") &
         reported_month <= as.Date("2023-01-01") ~ "After",
-      
+
       campus == "Ohio State" &
         reported_month >= as.Date("2021-01-01") &
         reported_month <= as.Date("2022-12-01") ~ "Before",
-      
+
       campus == "Ohio State" &
         reported_month >= as.Date("2023-01-01") &
         reported_month <= as.Date("2024-12-01") ~ "After",
-      
+
       campus %in% c("UCF", "Stetson") &
-        reported_month >= as.Date("2019-05-01") &
-        reported_month <= as.Date("2021-04-01") ~ "Before",
-      
+        reported_month >= as.Date("2022-11-01") &
+        reported_month <= as.Date("2023-10-01") ~ "Before",
+
       campus %in% c("UCF", "Stetson") &
-        reported_month >= as.Date("2021-06-01") &
-        reported_month <= as.Date("2023-05-01") ~ "After",
-      
+        reported_month >= as.Date("2023-12-01") &
+        reported_month <= as.Date("2024-11-01") ~ "After",
+
       TRUE ~ NA_character_
     )
   ) |>
   filter(!is.na(period)) |>
-  mutate(period = factor(period, levels = c("Before", "After"))) |>
+  mutate(
+    period = factor(
+      period,
+      levels = c("Before", "After")
+    )
+  ) |>
   group_by(campus, period) |>
   summarize(
     average = mean(n),
+    months = n(),
     .groups = "drop"
   )
 
 before_after |>
   ggplot(aes(x = campus, y = average, fill = period)) +
   geom_col(position = "dodge") +
+  geom_text(
+    aes(label = round(average, 1)),
+    position = position_dodge(width = 0.9),
+    vjust = -0.5,
+    size = 3
+  ) +
   labs(
     x = "University",
-    y = "Average monthly reported incidents",
+    y = "Average Monthly Reported Incidents",
     fill = "Period"
   ) +
   theme_minimal() +
   theme(legend.position = "bottom")
 ```
 
-*Note:* Each bar represents the average monthly number of reported incidents over a 24-month period. Michigan State compares January 2019–December 2020 with February 2021–January 2023. Ohio State compares January 2021–December 2022 with January 2023–December 2024. The University of Central Florida and Stetson compare May 2019–April 2021 with June 2021–May 2023. Florida's selected policy date represents legal authorization rather than uninterrupted online betting availability. The figure presents descriptive comparisons and does not identify causal effects.
+*Figure 2 note:* Bars show the average number of crime-log entries per reported month. Michigan State: January 2019–December 2020 (before, 24 months) and February 2021–January 2023 (after, 24 months). Ohio State: January 2021–December 2022 (before, 24 months) and January 2023–December 2024 (after, 24 months). UCF and Stetson: November 2022–October 2023 (before, 12 months) and December 2023–November 2024 (after, 12 months). November 2023 is excluded as Florida's launch month. Florida uses shorter windows because its November 2023 launch leaves fewer post-launch months within our selected 2018–2024 analysis period.
 
-## The Other category accounts for most incidents - Pei Yun Chuang
+## Crime categories differ across campuses - Pei Yun Chuang
 
-The third finding is that the broad **Other** category makes up most of the harmonized reports. Figure 3 separates incidents into the six categories used across all campuses. Of the **40,196 reports in the 2018–2024 analysis period**, **31,703** are classified as Other. This category includes several source offense types rather than one consistent kind of crime. Therefore, comparisons of overall incident counts may depend on differences in what each university records, and analyses of a specific crime category may be more informative than total reports alone.
+The composition of campus reports varies considerably across universities, especially at TCU. Figure 3 compares the percentage assigned to each standardized crime category. Across the 40,196 entries in the analysis sample, 31,703 (78.9%) fall in Other, a group that includes theft and property damage. Other accounts for 88.1% of Stetson reports and 62.8% of TCU reports. At TCU, alcohol offenses make up 24.9% of entries, a substantially larger share than at the other campuses.
+
+These differences matter for the research question because the totals in Figures 1 and 2 combine several types of incidents. A rise in the total number of reports may be concentrated in one category and may not describe the same mix of offenses at another university. Figure 3 identifies this variation in the data, although our before-and-after comparisons still use total monthly reports.
 
 ```{r}
 #| label: fig-crime-type
-#| fig-cap: "Reported incidents by crime category and university, 2018–2024"
+#| fig-cap: "The Other category dominates reports, while TCU has a larger alcohol-offense share, 2018–2024"
 #| fig-width: 10
-#| fig-height: 7
-sample |>
-  mutate(`crime type` = factor(`crime type`, levels = c(
-    "Alcohol offense", "Sexual offense", "Robbery offense",
-    "Burglary offense", "Assault offense", "Other"
-  ))) |>
-  ggplot(aes(x = `crime type`)) +
-  geom_bar() +
-  facet_wrap(~ campus, scales = "free_y", ncol = 2) +
-  labs(x = "Crime category", y = "Number of reported incidents") +
+#| fig-height: 6
+
+crime_shares <- sample |>
+  mutate(
+    crime_category = case_when(
+      `crime type` == "Alcohol offense" ~ "Alcohol",
+      `crime type` == "Sexual offense" ~ "Sexual",
+      `crime type` == "Robbery offense" ~ "Robbery",
+      `crime type` == "Burglary offense" ~ "Burglary",
+      `crime type` == "Assault offense" ~ "Assault",
+      `crime type` == "Other" ~ "Other"
+    )
+  ) |>
+  count(campus, crime_category) |>
+  group_by(campus) |>
+  mutate(share = n / sum(n))
+
+crime_shares |>
+  ggplot(aes(
+    x = campus,
+    y = share,
+    fill = crime_category
+  )) +
+  geom_col() +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    x = "University",
+    y = "Share of Reported Incidents",
+    fill = "Crime Category"
+  ) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+  theme(legend.position = "bottom")
 ```
 
-*Figure 3 note:* Each panel shows the numbers of reported incidents by category for one university from 2018 through 2024. The Other group includes many different original incident descriptions. The vertical scale differs across panels and counts are not adjusted for campus enrollment.
+*Figure 3 note:* Each university's bar totals 100% of its crime-log entries dated January 2018–December 2024. Segments show the share assigned to Alcohol, Sexual, Robbery, Burglary, Assault, or Other; percentages use that campus's total as the denominator. Other includes descriptions such as theft and property damage. Category assignments follow our harmonization of the original campus logs.
 
-## Crime reports also change in states without legalization - Pei Yun Chuang
+## Reports also changed at campuses without an online betting launch - Pei Yun Chuang
 
-The final finding is that crime reports also change at universities in states without online sports betting legalization. Figure 4 displays annual reports at Pacific and TCU, located in California and Texas. Both universities show year-to-year variation despite the absence of a state online sports betting launch during the observation period. These campuses offer useful context, but they do not function as matched statistical controls because their populations, reporting systems, and underlying crime trends may differ from the legalized states. The variation in these comparison campuses further limits a causal interpretation of Figure 2.
+Reported crime also changed at Pacific and TCU, even though online sports betting had not launched in California or Texas during the study period. Figure 4 shows that Pacific's annual reports declined from 454 in 2018 to 189 in 2024, a 58.4% decrease. TCU followed a different path: reports fell from 348 in 2019 to 212 in 2020, rebounded to 401 in 2022, and reached 328 in 2024.
+
+These two universities help put the launch-state results in context. Pacific experienced a long decline without an online sports betting launch, while TCU's reports fell and recovered over the same seven-year period. Therefore, the decreases at Michigan State and Stetson cannot be treated as unique to states with online betting. Figure 4 supports the central conclusion that changes in campus reports were not consistently linked to the launch dates.
 
 ```{r}
 #| label: fig-no-legalization
-#| fig-cap: "Annual reported incidents at Pacific and TCU, 2018–2024"
+#| fig-cap: "Campus reports changed in California and Texas without online sports betting launches, 2018–2024"
 #| fig-width: 9
 #| fig-height: 5
+
 sample |>
   filter(campus == "Pacific" | campus == "TCU") |>
   count(campus, reported_year) |>
-  ggplot(aes(x = reported_year, y = n, color = campus)) +
+  ggplot(aes(
+    x = reported_year,
+    y = n,
+    color = campus
+  )) +
   geom_line() +
   geom_point() +
-  labs(x = "Year reported", y = "Number of reported incidents", color = "University") +
-  theme_minimal()
+  coord_cartesian(ylim = c(0, 500)) +
+  labs(
+    x = "Year Reported",
+    y = "Number of Reported Incidents",
+    color = "University"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
 ```
 
-*Figure 4 note:* Annual counts reflect the dates incidents were reported, not necessarily when they occurred. The lines include only Pacific (California) and TCU (Texas). These are counts of log entries, not rates per enrolled student.
+*Figure 4 note:* Each point is the annual number of crime-log entries by report year, 2018–2024. Pacific is in California, and TCU is in Texas; neither state launched online sports betting during this period. The lines show annual totals for two comparison campuses with different reporting volumes.
 
 # Conclusion - Pei Yun Chuang
 
-Reported campus crime changed in different directions around the selected state sports betting milestones. Michigan State and Ohio State recorded lower monthly averages afterward, whereas UCF and Stetson recorded higher averages. Similar variation at Pacific and TCU, which did not have online sports betting legalization dates in the study period, suggests that many other factors can influence campus reports. Our data cannot isolate the effect of legalization because the crime logs use different reporting practices, we do not observe changes in enrollment or campus activity, and the observation period includes pandemic disruptions. Florida also presents a timing problem: its 2021 authorization did not provide continuous online betting access. A useful next step would be to compare specific offense categories and crime reports per enrolled student, using consistently defined online betting launch dates and additional information on campus conditions. Our results establish differences in reported counts, not a causal effect of sports betting legalization.
+Campus crime reports did not show a general increase after online sports betting launched. The average monthly count fell at Michigan State and Stetson, barely changed at Ohio State, and rose at UCF. Pacific and TCU also experienced sizeable changes in states without online launches. The strongest finding is the lack of a shared pattern: even the two Florida universities moved in opposite directions over the same 12-month comparison periods.
+
+The analysis uses reported incident counts, and the original logs differ across universities. Changes in student populations, campus activity during COVID-19, or reporting procedures may have contributed to the observed movements. Florida's shorter comparison period also limits comparisons with Michigan and Ohio. A useful next step would be to examine monthly changes by offense category and incorporate enrollment data and campus activity measures. Those additions would help identify which types of reports drive the differences and whether the trends persist after accounting for broader changes across universities.
+
+## Project links
+
+- [GitHub Repository](https://github.com/Sheilaaa0312/Data_Wrangling_Simulation_Week)
+
+- [Published Report](https://sheilaaa0312.github.io/Data_Wrangling_Simulation_Week/)
+
+::: {style="break-before: page; page-break-before: always;"}
+:::
 
 # Appendix
 
 ## Contribution statement - Xueying Luo
+
+I cleaned and standardized the crime logs for the University of the Pacific, the University of Central Florida, and Stetson University. I also helped combine the six universities into the harmonized dataset and reviewed date formats, crime categories, missing values, and consistency across the files. For the report, I drafted the Executive Summary, the Data overview and main measures, and the first two Results sections. I created Figure 1 to show monthly trends and online betting launch dates and Figure 2 to compare reports before and after the selected milestones. I also helped review the combined report for consistent wording, figures, and interpretation.
 
 ## Contribution statement - Pei Yun Chuang
 
