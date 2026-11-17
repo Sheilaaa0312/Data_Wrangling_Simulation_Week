@@ -354,7 +354,7 @@ The analysis uses reported incident counts, and the original logs differ across 
 
 - [GitHub Repository](https://github.com/Sheilaaa0312/Data_Wrangling_Simulation_Week)
 
-- [Published Report](https://sheilaaa0312.github.io/Data_Wrangling_Simulation_Week/)
+- [GitHub Pages](https://sheilaaa0312.github.io/Data_Wrangling_Simulation_Week/Group2_Simulation_Week_Report.html)
 
 ::: {style="break-before: page; page-break-before: always;"}
 :::
